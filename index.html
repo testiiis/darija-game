@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دارجة — Apprends le Darija</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C1272D;
+    --green: #006233;
+    --gold: #D4A017;
+    --sand: #F5E6C8;
+    --terracotta: #B5451B;
+    --cream: #FDF6E3;
+    --dark: #1A0A00;
+    --text: #2D1500;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* PATTERN MAROCAIN */
+  .zellige-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-color: var(--green);
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(212,160,23,0.08) 20px, rgba(212,160,23,0.08) 21px),
+      repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(212,160,23,0.08) 20px, rgba(212,160,23,0.08) 21px);
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(180deg, var(--green) 0%, #004d28 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-arch {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--cream);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+    text-align: center;
+  }
+
+  .arabic-title {
+    font-family: 'Amiri', serif;
+    font-size: 72px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 20px rgba(212,160,23,0.3);
+    letter-spacing: 2px;
+  }
+
+  .main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* DIVIDER MAROCAIN */
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 40px auto 10px;
+    color: var(--gold);
+    font-size: 20px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .divider::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+  /* MAIN CONTENT */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 50px 20px 80px;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+
+  .intro p {
+    font-size: 17px;
+    color: #5a3a1a;
+    line-height: 1.8;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* CARDS DES JEUX */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    margin-bottom: 60px;
+  }
+
+  .game-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: block;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .game-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+  }
+
+  .card-top {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-icon {
+    font-size: 52px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+
+  .card-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background-image:
+      repeating-linear-gradient(45deg, white 0px, white 1px, transparent 1px, transparent 12px),
+      repeating-linear-gradient(-45deg, white 0px, white 1px, transparent 1px, transparent 12px);
+  }
+
+  .card-1 .card-top { background: linear-gradient(135deg, var(--red), #8B1A1F); }
+  .card-2 .card-top { background: linear-gradient(135deg, var(--green), #003d1f); }
+  .card-3 .card-top { background: linear-gradient(135deg, var(--terracotta), #7a2e10); }
+  .card-4 .card-top { background: linear-gradient(135deg, #5B4A8A, #3a2d6b); }
+  .card-5 .card-top { background: linear-gradient(135deg, #1a6b8a, #0d3d52); }
+
+  .card-body {
+    padding: 24px 22px 28px;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .card-1 .card-tag { background: #FDE8E9; color: var(--red); }
+  .card-2 .card-tag { background: #E0F0E8; color: var(--green); }
+  .card-3 .card-tag { background: #FDEEE8; color: var(--terracotta); }
+  .card-4 .card-tag { background: #EDE8F8; color: #5B4A8A; }
+  .card-5 .card-tag { background: #E8F4F8; color: #1a6b8a; }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--dark);
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: #7a5a3a;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  .card-level {
+    display: flex;
+    gap: 3px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ddd;
+  }
+  .dot.filled { background: var(--gold); }
+
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.5px;
+  }
+
+  .card-btn::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+
+  .game-card:hover .card-btn::after {
+    transform: translateX(4px);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--green);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 30px;
+    font-size: 13px;
+  }
+
+  footer span {
+    color: var(--gold);
+    font-family: 'Amiri', serif;
+    font-size: 20px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* PROGRESS BADGE */
+  .progress-bar-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .progress-emoji { font-size: 32px; }
+
+  .progress-info { flex: 1; }
+  .progress-info h3 { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+
+  .progress-track {
+    height: 8px;
+    background: #f0e8d8;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .progress-text { font-size: 12px; color: #aaa; margin-top: 6px; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .game-card {
+    animation: fadeIn 0.5s ease both;
+  }
+  .game-card:nth-child(1) { animation-delay: 0.1s; }
+  .game-card:nth-child(2) { animation-delay: 0.2s; }
+  .game-card:nth-child(3) { animation-delay: 0.3s; }
+  .game-card:nth-child(4) { animation-delay: 0.4s; }
+  .game-card:nth-child(5) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+<div class="zellige-bg"></div>
+<div class="content">
+  <header>
+    <div class="header-inner">
+      <div class="arabic-title">دارجة</div>
+      <h1 class="main-title">Apprends le Darija</h1>
+      <p class="subtitle">Le marocain, par le jeu ✦ Pour les enfants de la diaspora</p>
+    </div>
+    <div class="header-arch"></div>
+  </header>
+
+  <main>
+    <div class="intro">
+      <div class="divider">✦</div>
+      <h2>5 jeux pour parler comme à la maison</h2>
+      <p>Tu n'as pas grandi avec le darija ? Pas de problème. Ces jeux te permettent d'apprendre naturellement, à ton rythme — les salutations, les verbes, les pronoms, et bien plus encore.</p>
+    </div>
+
+    <div class="progress-bar-section">
+      <div class="progress-emoji">🌙</div>
+      <div class="progress-info">
+        <h3>Ta progression aujourd'hui</h3>
+        <div class="progress-track">
+          <div class="progress-fill" id="mainProgress"></div>
+        </div>
+        <div class="progress-text" id="progressText">Joue pour commencer ta progression !</div>
+      </div>
+    </div>
+
+    <div class="games-grid">
+
+      <div class="game-card card-1" onclick="window.location.href='game1-flash.html'">
+        <div class="card-top">
+          <div class="card-pattern"></div>
+          <div class="card-icon">🃏</div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Vocabulaire</span>
+          <h2 class="card-title">Flash Cards</h2>
+          <p class="card-desc">Des cartes qui s'animent — devine la traduction, retourne et vérifie. Salutations, verbes et noms courants.</p>
+          <div class="card-meta">
+            <div class="card-level">
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+              <div class="dot"></div>
+            </div>
+            <span>Débutant</span>
+          </div>
+          <div class="card-btn">Jouer maintenant</div>
+        </div>
+      </div>
+
+      <div class="game-card card-2" onclick="window.location.href='game2-traduction.html'">
+        <div class="card-top">
+          <div class="card-pattern"></div>
+          <div class="card-icon">🔤</div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Grammaire</span>
+          <h2 class="card-title">Traduc'Express</h2>
+          <p class="card-desc">Une phrase en français, tu la traduis en darija. Des indices si tu bloques. Parfait pour les verbes au passé !</p>
+          <div class="card-meta">
+            <div class="card-level">
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+            </div>
+            <span>Intermédiaire</span>
+          </div>
+          <div class="card-btn">Jouer maintenant</div>
+        </div>
+      </div>
+
+      <div class="game-card card-3" onclick="window.location.href='game3-pronoms.html'">
+        <div class="card-top">
+          <div class="card-pattern"></div>
+          <div class="card-icon">👜</div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Pronoms</span>
+          <h2 class="card-title">C'est à qui ?</h2>
+          <p class="card-desc">Un objet apparaît — choisis le bon pronom possessif ! Entraîne-toi avec "dyali", "dyalek", "dyalha"...</p>
+          <div class="card-meta">
+            <div class="card-level">
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+              <div class="dot"></div>
+            </div>
+            <span>Débutant</span>
+          </div>
+          <div class="card-btn">Jouer maintenant</div>
+        </div>
+      </div>
+
+      <div class="game-card card-4" onclick="window.location.href='game4-conjugaison.html'">
+        <div class="card-top">
+          <div class="card-pattern"></div>
+          <div class="card-icon">⚡</div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Conjugaison</span>
+          <h2 class="card-title">Conjugue vite !</h2>
+          <p class="card-desc">Un verbe, un pronom — conjugue en un éclair avant que le temps ne s'écoule ! Passé, présent, toutes les personnes.</p>
+          <div class="card-meta">
+            <div class="card-level">
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+            </div>
+            <span>Intermédiaire</span>
+          </div>
+          <div class="card-btn">Jouer maintenant</div>
+        </div>
+      </div>
+
+      <div class="game-card card-5" onclick="window.location.href='game5-dialogue.html'">
+        <div class="card-top">
+          <div class="card-pattern"></div>
+          <div class="card-icon">💬</div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Conversation</span>
+          <h2 class="card-title">Dialogue au Souk</h2>
+          <p class="card-desc">Reconstitue un dialogue dans le bon ordre ! Situations du quotidien : rencontres, journée type, météo...</p>
+          <div class="card-meta">
+            <div class="card-level">
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+              <div class="dot filled"></div>
+            </div>
+            <span>Avancé</span>
+          </div>
+          <div class="card-btn">Jouer maintenant</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <span>بالتوفيق</span>
+    Bonne chance dans ton apprentissage du darija 🌙
+  </footer>
+</div>
+
+<script>
+  const stored = parseInt(localStorage.getItem('darija_xp') || '0');
+  const max = 500;
+  const pct = Math.min(100, Math.round(stored / max * 100));
+  document.getElementById('mainProgress').style.width = pct + '%';
+  document.getElementById('progressText').textContent = stored > 0
+    ? `${stored} points · Continue comme ça !`
+    : 'Joue pour commencer ta progression !';
+</script>
+</body>
+</html>

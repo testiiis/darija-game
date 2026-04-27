@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traduc'Express — Darija</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #006233; --gold: #D4A017; --cream: #FDF6E3; --dark: #1A0A00; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Lato', sans-serif; background: var(--cream); min-height: 100vh; }
+
+  nav {
+    background: var(--green);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-back { color: white; text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+  .nav-back:hover { opacity: 1; }
+  .nav-title { color: white; font-family: 'Playfair Display', serif; font-size: 20px; flex: 1; text-align: center; }
+  .nav-score { background: rgba(255,255,255,0.2); color: white; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; }
+
+  .game-area { max-width: 640px; margin: 0 auto; padding: 40px 20px; }
+
+  .question-box {
+    background: linear-gradient(145deg, var(--green), #004d28);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(0,98,51,0.3);
+  }
+  .q-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+  .q-text { font-family: 'Playfair Display', serif; font-size: 26px; color: white; line-height: 1.4; }
+  .q-context { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 10px; font-style: italic; }
+
+  .hint-box {
+    background: #FFF8E8;
+    border: 1.5px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .hint-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .hint-text { font-size: 15px; color: #5a4010; line-height: 1.5; }
+
+  .word-bank {
+    margin-bottom: 24px;
+  }
+  .wb-label { font-size: 12px; color: #aaa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  .words-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .word-chip {
+    padding: 10px 16px;
+    background: white;
+    border: 1.5px solid #ddd;
+    border-radius: 20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .word-chip:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
+  .word-chip.selected { background: var(--green); color: white; border-color: var(--green); }
+  .word-chip.wrong-word { background: #FFE8E8; border-color: #C1272D; color: #C1272D; }
+  .word-chip.disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+
+  .answer-area {
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #ddd;
+    padding: 20px;
+    min-height: 70px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .answer-area.correct { border-color: var(--green); background: #f0faf0; }
+  .answer-area.wrong { border-color: #C1272D; background: #fff5f5; }
+  .answer-placeholder { color: #ccc; font-style: italic; font-size: 15px; }
+
+  .answer-chip {
+    padding: 8px 14px;
+    background: var(--green);
+    color: white;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .answer-chip:hover { background: #004d28; }
+
+  .result-box {
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .result-box.correct { background: #E8F5E8; border: 1.5px solid var(--green); }
+  .result-box.wrong { background: #FFE8E8; border: 1.5px solid #C1272D; }
+  .result-icon { font-size: 24px; margin-bottom: 8px; }
+  .result-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .result-answer { font-size: 14px; color: #555; line-height: 1.5; }
+  .result-answer strong { color: var(--green); }
+
+  .btn-row { display: flex; gap: 12px; margin-bottom: 24px; }
+  .btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-hint { background: #FFF8E8; color: #8a6010; border: 1.5px solid var(--gold); }
+  .btn-hint:hover { background: var(--gold); color: white; }
+  .btn-check { background: var(--green); color: white; }
+  .btn-check:hover { background: #004d28; }
+  .btn-clear { background: #f0f0f0; color: #777; border: none; }
+  .btn-clear:hover { background: #ddd; }
+  .btn-next { width: 100%; padding: 16px; background: var(--green); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; display: none; }
+  .btn-next:hover { background: #004d28; }
+
+  .score-row { display: flex; gap: 12px; }
+  .score-card { flex: 1; background: white; border-radius: 12px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .score-num { font-size: 26px; font-weight: 700; }
+  .score-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+
+  .congrats { text-align: center; padding: 60px 20px; display: none; }
+  .congrats h2 { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 12px; color: var(--green); }
+  .congrats p { font-size: 17px; color: #777; margin-bottom: 28px; }
+  .btn-restart { background: var(--green); color: white; border: none; padding: 16px 40px; border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer; }
+
+  .q-counter { text-align: center; font-size: 13px; color: #aaa; margin-bottom: 16px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back">← Accueil</a>
+  <span class="nav-title">🔤 Traduc'Express</span>
+  <span class="nav-score" id="scoreDisplay">0 pts</span>
+</nav>
+
+<div class="game-area" id="gameArea">
+  <div class="q-counter" id="qCounter">Question 1/10</div>
+
+  <div class="question-box">
+    <div class="q-label">Traduis en darija</div>
+    <div class="q-text" id="qText">—</div>
+    <div class="q-context" id="qContext"></div>
+  </div>
+
+  <div class="hint-box" id="hintBox">
+    <div class="hint-label">💡 Indice</div>
+    <div class="hint-text" id="hintText"></div>
+  </div>
+
+  <div class="answer-area" id="answerArea">
+    <span class="answer-placeholder">Clique sur les mots pour former la phrase...</span>
+  </div>
+
+  <div class="word-bank">
+    <div class="wb-label">Mots disponibles</div>
+    <div class="words-grid" id="wordsGrid"></div>
+  </div>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-answer" id="resultAnswer"></div>
+  </div>
+
+  <div class="btn-row" id="actionBtns">
+    <button class="btn btn-hint" onclick="showHint()">💡 Indice (−5 pts)</button>
+    <button class="btn btn-clear" onclick="clearAnswer()">✕ Effacer</button>
+    <button class="btn btn-check" onclick="checkAnswer()">✓ Vérifier</button>
+  </div>
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">Question suivante →</button>
+
+  <div class="score-row">
+    <div class="score-card">
+      <div class="score-num" id="statCorrect" style="color:var(--green)">0</div>
+      <div class="score-label">Bonnes</div>
+    </div>
+    <div class="score-card">
+      <div class="score-num" id="statWrong" style="color:#C1272D">0</div>
+      <div class="score-label">Faux</div>
+    </div>
+    <div class="score-card">
+      <div class="score-num" id="statScore" style="color:var(--gold)">0</div>
+      <div class="score-label">Points</div>
+    </div>
+  </div>
+</div>
+
+<div class="congrats" id="congrats">
+  <div style="font-size:64px;margin-bottom:16px">🌙</div>
+  <h2>Mzyan !</h2>
+  <p id="congratsMsg">Bravo, tu as fini le quiz !</p>
+  <button class="btn-restart" onclick="restartGame()">Rejouer</button>
+</div>
+
+<script>
+const questions = [
+  {
+    fr: "Je suis allé(e) au hammam hier matin.",
+    answer: ["Mchit", "L", "hammam", "lbareh", "bakri"],
+    hint: "Utilise le passé de 'mcha' (aller) + 'lbareh' (hier) + 'bakri' (tôt/le matin)",
+    context: "Parle de ta journée d'hier",
+    distractors: ["klit", "hdarti", "mzyan", "f"]
+  },
+  {
+    fr: "Elle a mangé son petit-déjeuner.",
+    answer: ["Klat", "laftor", "dyalha"],
+    hint: "'kla' est irrégulier au passé → 'klat' pour elle. 'laftor' = petit-déjeuner, 'dyalha' = le sien (féminin)",
+    context: "Raconte ce qu'elle a fait",
+    distractors: ["klit", "tiyeb", "sbiha", "Sbah"]
+  },
+  {
+    fr: "Nous avons joué au football à la plage.",
+    answer: ["L3abna", "lkora", "f", "lbhar"],
+    hint: "'L3ab' → 'L3abna' pour nous. 'lkora' = football, 'lbhar' = mer/plage",
+    context: "Raconte le weekend",
+    distractors: ["mchina", "3amna", "tmachina", "kolchi"]
+  },
+  {
+    fr: "Comment va ta famille ?",
+    answer: ["Ki", "dayra", "l3a'iltek"],
+    hint: "'Ki dayra' = comment va... 'l3a'ila' + 'tek' (ton) = ta famille",
+    context: "Question de politesse",
+    distractors: ["Wach", "smitek", "mezyan", "labas"]
+  },
+  {
+    fr: "Elle est allée travailler puis elle a mangé le déjeuner.",
+    answer: ["Mchat", "lkhadma", "o", "klat", "laghda"],
+    hint: "'mcha' → 'mchat' (elle). 'o' = et. 'laghda' = le déjeuner",
+    context: "Décris sa journée",
+    distractors: ["mchit", "klit", "lbareh", "bakri"]
+  },
+  {
+    fr: "Mon frère est plus grand que moi.",
+    answer: ["Khoya", "kbar", "menni"],
+    hint: "'Khoya' = mon frère. 'kbar' = plus grand. 'menni' = que moi",
+    context: "Parle de ta famille",
+    distractors: ["khti", "sghar", "wahed", "dyali"]
+  },
+  {
+    fr: "Qu'est-ce que tu as fait hier ?",
+    answer: ["Chno", "darti", "lbareh"],
+    hint: "'Chno' = quoi. 'dar' → 'darti' (tu as fait). 'lbareh' = hier",
+    context: "Question sur le passé",
+    distractors: ["Wach", "darna", "lyoma", "ki"]
+  },
+  {
+    fr: "Il pleut aujourd'hui.",
+    answer: ["Kayna", "chta", "lyoma"],
+    hint: "'Kayna' = il y a (féminin). 'chta' = pluie. 'lyoma' = aujourd'hui",
+    context: "Parle de la météo",
+    distractors: ["Kayen", "sahd", "lbard", "lbareh"]
+  },
+  {
+    fr: "Je me suis habillé(e) et j'ai pris mon sac.",
+    answer: ["Lbast", "hwayji", "o", "khadit", "shkara", "dyali"],
+    hint: "'lbas' → 'lbast' (j'ai mis). 'khadit' = j'ai pris. 'dyali' = le mien",
+    context: "La routine du matin",
+    distractors: ["mchit", "sawbt", "lbareh", "kolchi"]
+  },
+  {
+    fr: "Tout va bien, grâce à Dieu.",
+    answer: ["Kolchi", "labas", "lhamdolah"],
+    hint: "'Kolchi' = tout. 'labas' = ça va. 'lhamdolah' = grâce à Dieu",
+    context: "Répondre à 'comment tu vas ?'",
+    distractors: ["wach", "bikhir", "mzyan", "ah"]
+  }
+];
+
+let order = [];
+let currentQ = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let selectedWords = [];
+let availableWords = [];
+let hintUsed = false;
+let answered = false;
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startGame() {
+  order = shuffle([...Array(questions.length).keys()]);
+  currentQ = 0; score = 0; correct = 0; wrong = 0;
+  document.getElementById('congrats').style.display = 'none';
+  document.getElementById('gameArea').style.display = 'block';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (currentQ >= order.length) { showCongrats(); return; }
+  const q = questions[order[currentQ]];
+  hintUsed = false;
+  answered = false;
+  selectedWords = [];
+  availableWords = shuffle([...q.answer, ...q.distractors]);
+
+  document.getElementById('qText').textContent = q.fr;
+  document.getElementById('qContext').textContent = '→ ' + q.context;
+  document.getElementById('qCounter').textContent = 'Question ' + (currentQ + 1) + '/' + order.length;
+  document.getElementById('hintBox').style.display = 'none';
+  document.getElementById('hintText').textContent = q.hint;
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+  document.getElementById('actionBtns').style.display = 'flex';
+
+  const area = document.getElementById('answerArea');
+  area.className = 'answer-area';
+  area.innerHTML = '<span class="answer-placeholder">Clique sur les mots pour former la phrase...</span>';
+
+  renderWordBank();
+  updateStats();
+}
+
+function renderWordBank() {
+  const grid = document.getElementById('wordsGrid');
+  grid.innerHTML = '';
+  availableWords.forEach((w, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip';
+    chip.textContent = w;
+    chip.dataset.index = i;
+    chip.onclick = () => selectWord(i, chip);
+    if (selectedWords.includes(i)) chip.className = 'word-chip selected';
+    grid.appendChild(chip);
+  });
+}
+
+function selectWord(index, chip) {
+  if (answered) return;
+  if (selectedWords.includes(index)) {
+    selectedWords = selectedWords.filter(i => i !== index);
+  } else {
+    selectedWords.push(index);
+  }
+  renderWordBank();
+  renderAnswer();
+}
+
+function renderAnswer() {
+  const area = document.getElementById('answerArea');
+  if (selectedWords.length === 0) {
+    area.innerHTML = '<span class="answer-placeholder">Clique sur les mots pour former la phrase...</span>';
+    return;
+  }
+  area.innerHTML = '';
+  selectedWords.forEach((idx) => {
+    const chip = document.createElement('div');
+    chip.className = 'answer-chip';
+    chip.textContent = availableWords[idx];
+    chip.onclick = () => {
+      selectedWords = selectedWords.filter(i => i !== idx);
+      renderWordBank();
+      renderAnswer();
+    };
+    area.appendChild(chip);
+  });
+}
+
+function clearAnswer() {
+  selectedWords = [];
+  renderWordBank();
+  renderAnswer();
+}
+
+function showHint() {
+  if (!hintUsed) { hintUsed = true; score = Math.max(0, score - 5); }
+  document.getElementById('hintBox').style.display = 'block';
+}
+
+function checkAnswer() {
+  if (selectedWords.length === 0) return;
+  const q = questions[order[currentQ]];
+  const userAnswer = selectedWords.map(i => availableWords[i]);
+  const isCorrect = JSON.stringify(userAnswer) === JSON.stringify(q.answer);
+
+  answered = true;
+  const area = document.getElementById('answerArea');
+  const resultBox = document.getElementById('resultBox');
+  resultBox.style.display = 'block';
+
+  if (isCorrect) {
+    area.className = 'answer-area correct';
+    correct++;
+    score += hintUsed ? 5 : 15;
+    resultBox.className = 'result-box correct';
+    document.getElementById('resultIcon').textContent = '✅';
+    document.getElementById('resultTitle').textContent = 'Parfait !';
+    document.getElementById('resultAnswer').innerHTML = 'Traduction : <strong>' + q.answer.join(' ') + '</strong>';
+  } else {
+    area.className = 'answer-area wrong';
+    wrong++;
+    resultBox.className = 'result-box wrong';
+    document.getElementById('resultIcon').textContent = '❌';
+    document.getElementById('resultTitle').textContent = 'Pas tout à fait...';
+    document.getElementById('resultAnswer').innerHTML = 'La bonne réponse : <strong>' + q.answer.join(' ') + '</strong>';
+  }
+
+  document.getElementById('actionBtns').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'block';
+  updateStats();
+}
+
+function nextQuestion() {
+  currentQ++;
+  loadQuestion();
+}
+
+function updateStats() {
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('scoreDisplay').textContent = score + ' pts';
+}
+
+function showCongrats() {
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('congrats').style.display = 'block';
+  const pct = Math.round(correct / order.length * 100);
+  document.getElementById('congratsMsg').textContent =
+    `${correct}/${order.length} bonnes réponses — ${pct}% ! Tu as gagné ${score} points.`;
+  const xp = parseInt(localStorage.getItem('darija_xp') || '0') + score;
+  localStorage.setItem('darija_xp', xp);
+}
+
+function restartGame() { startGame(); }
+startGame();
+</script>
+</body>
+</html>

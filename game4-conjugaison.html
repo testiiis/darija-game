@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conjugue vite ! — Darija</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --purple: #5B4A8A; --gold: #D4A017; --cream: #FDF6E3; --dark: #1A0A00; --green: #006233; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Lato', sans-serif; background: var(--cream); min-height: 100vh; }
+
+  nav { background: var(--purple); padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+  .nav-back { color: white; text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+  .nav-back:hover { opacity: 1; }
+  .nav-title { color: white; font-family: 'Playfair Display', serif; font-size: 20px; flex: 1; text-align: center; }
+  .nav-score { background: rgba(255,255,255,0.2); color: white; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; }
+
+  .game-area { max-width: 640px; margin: 0 auto; padding: 40px 20px; }
+
+  .mode-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .mode-btn { flex: 1; padding: 12px; border: 2px solid #ddd; background: white; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: #777; text-align: center; }
+  .mode-btn.active { background: var(--purple); color: white; border-color: var(--purple); }
+
+  .challenge-box {
+    background: linear-gradient(145deg, var(--purple), #3a2d6b);
+    border-radius: 24px;
+    padding: 36px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(91,74,138,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .challenge-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(60deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 20px);
+  }
+  .c-tense { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+  .c-pronoun { font-size: 40px; font-weight: 700; color: var(--gold); margin-bottom: 8px; font-family: 'Playfair Display', serif; }
+  .c-pronoun-fr { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+  .c-verb { font-size: 20px; color: white; margin-bottom: 4px; }
+  .c-verb-fr { font-size: 14px; color: rgba(255,255,255,0.5); }
+  .c-type { display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-top: 12px; }
+
+  .answer-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .ans-btn {
+    background: white;
+    border: 2px solid #e0d0b8;
+    border-radius: 14px;
+    padding: 16px 12px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .ans-btn:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-2px); }
+  .ans-btn.correct { background: #E8F5E8; border-color: var(--green); color: var(--green); animation: popIn 0.3s; }
+  .ans-btn.wrong { background: #FFE8E8; border-color: #C1272D; color: #C1272D; animation: shake 0.3s; }
+  .ans-btn.reveal { background: #E8F5E8; border-color: var(--green); color: var(--green); opacity: 0.7; }
+  .ans-btn.disabled { pointer-events: none; }
+
+  @keyframes popIn {
+    0% { transform: scale(0.9); } 60% { transform: scale(1.06); } 100% { transform: scale(1); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); }
+  }
+
+  .rule-box {
+    background: #F0EAF8;
+    border: 1.5px solid var(--purple);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #3a2d6b;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .feedback { border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; display: none; font-size: 14px; line-height: 1.6; }
+  .feedback.correct { background: #E8F5E8; border: 1.5px solid var(--green); color: #2d5a2d; }
+  .feedback.wrong { background: #FFE8E8; border: 1.5px solid #C1272D; color: #5a2d2d; }
+
+  .btn-next { width: 100%; padding: 16px; background: var(--purple); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; display: none; margin-bottom: 16px; }
+  .btn-next:hover { background: #3a2d6b; }
+
+  .score-row { display: flex; gap: 12px; }
+  .score-card { flex: 1; background: white; border-radius: 12px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .score-num { font-size: 26px; font-weight: 700; }
+  .score-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+
+  .streak-badge {
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    min-height: 22px;
+  }
+
+  .q-counter { text-align: center; font-size: 13px; color: #aaa; margin-bottom: 16px; letter-spacing: 1px; }
+
+  .congrats { text-align: center; padding: 60px 20px; display: none; }
+  .congrats h2 { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 12px; color: var(--purple); }
+  .congrats p { font-size: 17px; color: #777; margin-bottom: 28px; }
+  .btn-restart { background: var(--purple); color: white; border: none; padding: 16px 40px; border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back">← Accueil</a>
+  <span class="nav-title">⚡ Conjugue vite !</span>
+  <span class="nav-score" id="scoreDisplay">0 pts</span>
+</nav>
+
+<div class="game-area" id="gameArea">
+  <div class="mode-tabs">
+    <button class="mode-btn active" onclick="setMode('passe')">🕐 Passé</button>
+    <button class="mode-btn" onclick="setMode('present')">⚡ Présent</button>
+    <button class="mode-btn" onclick="setMode('mixte')">🎲 Mixte</button>
+  </div>
+
+  <div class="q-counter" id="qCounter">Question 1/15</div>
+  <div class="streak-badge" id="streakBadge"></div>
+
+  <div class="challenge-box">
+    <div class="c-tense" id="cTense">Passé</div>
+    <div class="c-pronoun" id="cPronoun">Ana</div>
+    <div class="c-pronoun-fr" id="cPronounFr">(je)</div>
+    <div class="c-verb" id="cVerb">mcha</div>
+    <div class="c-verb-fr" id="cVerbFr">aller</div>
+    <span class="c-type" id="cType">irrégulier</span>
+  </div>
+
+  <div class="rule-box" id="ruleBox"></div>
+  <div class="answer-options" id="answerOptions"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">Suivant →</button>
+
+  <div class="score-row">
+    <div class="score-card">
+      <div class="score-num" id="statCorrect" style="color:var(--green)">0</div>
+      <div class="score-label">Bonnes</div>
+    </div>
+    <div class="score-card">
+      <div class="score-num" id="statWrong" style="color:#C1272D">0</div>
+      <div class="score-label">Erreurs</div>
+    </div>
+    <div class="score-card">
+      <div class="score-num" id="statStreak" style="color:var(--gold)">0</div>
+      <div class="score-label">Série</div>
+    </div>
+  </div>
+</div>
+
+<div class="congrats" id="congrats">
+  <div style="font-size:64px;margin-bottom:16px">⚡</div>
+  <h2>Parfait !</h2>
+  <p id="congratsMsg"></p>
+  <button class="btn-restart" onclick="restartGame()">Rejouer</button>
+</div>
+
+<script>
+const pronouns = [
+  { darija: 'Ana', fr: 'je' },
+  { darija: 'Nta', fr: 'tu (m.)' },
+  { darija: 'Nti', fr: 'tu (f.)' },
+  { darija: 'Howa', fr: 'il' },
+  { darija: 'Hiya', fr: 'elle' },
+  { darija: 'Hna', fr: 'nous' },
+  { darija: 'Ntoma', fr: 'vous' },
+  { darija: 'Homa', fr: 'ils/elles' }
+];
+
+const verbs = [
+  {
+    darija: 'mcha', fr: 'aller', type: 'irrégulier (a final)',
+    passe: { Ana: 'mchit', Nta: 'mchiti', Nti: 'mchiti', Howa: 'mcha', Hiya: 'mchaat', Hna: 'mchina', Ntoma: 'mchito', Homa: 'mchaow' },
+    present: { Ana: 'kanmchi', Nta: 'katmchi', Nti: 'katmchi', Howa: 'kaymchi', Hiya: 'katmchi', Hna: 'kanmchiw', Ntoma: 'katmchiw', Homa: 'kaymchiw' },
+    rule: "Irrégulier : change 'a' final en 'i'. Il/Elle garde le 'a' → mcha / mchaat. Ils → mchaow"
+  },
+  {
+    darija: 'kla', fr: 'manger', type: 'irrégulier (a final)',
+    passe: { Ana: 'klit', Nta: 'kliti', Nti: 'kliti', Howa: 'kla', Hiya: 'klaat', Hna: 'klina', Ntoma: 'klito', Homa: 'klaow' },
+    present: { Ana: 'kankol', Nta: 'katkol', Nti: 'katkoli', Howa: 'kaykol', Hiya: 'katkol', Hna: 'kankolw', Ntoma: 'katkolw', Homa: 'kaykolw' },
+    rule: "Irrégulier : change 'a' final en 'i'. Il → kla, Elle → klaat, Ils → klaow"
+  },
+  {
+    darija: 'hdar', fr: 'parler', type: 'régulier',
+    passe: { Ana: 'hdart', Nta: 'hdarti', Nti: 'hdarti', Howa: 'hdar', Hiya: 'hadrat', Hna: 'hdarna', Ntoma: 'hdarto', Homa: 'hadro' },
+    present: { Ana: 'kanhdar', Nta: 'kathdar', Nti: 'kathadri', Howa: 'kayhdar', Hiya: 'kathdar', Hna: 'kanhadro', Ntoma: 'kathadro', Homa: 'kayhadro' },
+    rule: "Régulier : ajoute la terminaison. Je→t, Tu→ti, Il→∅, Elle→at, Nous→na, Vous→to, Ils→o"
+  },
+  {
+    darija: 'khdam', fr: 'travailler', type: 'régulier',
+    passe: { Ana: 'khdamt', Nta: 'khdamti', Nti: 'khdamti', Howa: 'khdam', Hiya: 'khadmat', Hna: 'khdamna', Ntoma: 'khdamto', Homa: 'khadmo' },
+    present: { Ana: 'kankhdam', Nta: 'katkhdam', Nti: 'katkhdami', Howa: 'kaykhdam', Hiya: 'katkhdam', Hna: 'kankhdamo', Ntoma: 'katkhdamo', Homa: 'kaykhdamo' },
+    rule: "Régulier : terminaisons standards. Elle → khadmat (voyelle se déplace)"
+  },
+  {
+    darija: 'tiyeb', fr: 'cuisiner', type: 'régulier',
+    passe: { Ana: 'tiyebt', Nta: 'tiyebti', Nti: 'tiyebti', Howa: 'tiyeb', Hiya: 'tiybat', Hna: 'tiyebna', Ntoma: 'tiyebto', Homa: 'tiybo' },
+    present: { Ana: 'kantiyeb', Nta: 'kattiyeb', Nti: 'kattiybe', Howa: 'kaytiyeb', Hiya: 'kattiyeb', Hna: 'kantiybо', Ntoma: 'kattiybо', Homa: 'kaytiybo' },
+    rule: "Régulier. Elle → tiybat (la voyelle saute en arrière avant -at)"
+  },
+  {
+    darija: 'shaf', fr: 'voir', type: 'irrégulier (a long au milieu)',
+    passe: { Ana: 'shaft', Nta: 'shafti', Nti: 'shafti', Howa: 'shaf', Hiya: 'shafat', Hna: 'shafna', Ntoma: 'shafto', Homa: 'shafo' },
+    present: { Ana: 'kanshuf', Nta: 'katshuf', Nti: 'katshuf', Howa: 'kayshuf', Hiya: 'katshuf', Hna: 'kanshufo', Ntoma: 'katshufo', Homa: 'kayshufo' },
+    rule: "Irrégulier : 'a' long au milieu devient 'a' court au passé. Au présent : 'a' → 'u'"
+  },
+  {
+    darija: 'kan', fr: 'être (passé)', type: 'irrégulier (a long au milieu)',
+    passe: { Ana: 'kant', Nta: 'kanti', Nti: 'kanti', Howa: 'kan', Hiya: 'knat', Hna: 'kanna', Ntoma: 'kanto', Homa: 'kano' },
+    present: { Ana: 'kankon', Nta: 'katkon', Nti: 'katkon', Howa: 'kaykon', Hiya: 'katkon', Hna: 'kankonw', Ntoma: 'katkonw', Homa: 'kaykonw' },
+    rule: "'kan' = être. Passé : la voyelle longue raccourcit. Elle → knat (très irrégulier !)"
+  },
+  {
+    darija: 'lbas', fr: "s'habiller", type: 'irrégulier (2 lettres)',
+    passe: { Ana: 'lbast', Nta: 'lbasti', Nti: 'lbasti', Howa: 'lbas', Hiya: 'labsat', Hna: 'lbasna', Ntoma: 'lbasto', Homa: 'labso' },
+    present: { Ana: 'kanlbas', Nta: 'katlbas', Nti: 'katlbasi', Howa: 'kaylbas', Hiya: 'katlbas', Hna: 'kanlbaso', Ntoma: 'katlbaso', Homa: 'kaylbaso' },
+    rule: "Irrégulier 2 lettres : ajoute 'i' avant la terminaison. Elle/Ils : voyelle se déplace"
+  }
+];
+
+let mode = 'passe';
+let questions = [];
+let currentQ = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let streak = 0;
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    b.className = 'mode-btn' + (['passe', 'present', 'mixte'][i] === m ? ' active' : '');
+  });
+  startGame();
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function buildQuestions() {
+  questions = [];
+  const tenses = mode === 'mixte' ? ['passe', 'present'] : [mode];
+  verbs.forEach(verb => {
+    shuffle(pronouns).slice(0, 2).forEach(pron => {
+      const tense = tenses[Math.floor(Math.random() * tenses.length)];
+      const correct = verb[tense][pron.darija];
+      const wrongs = shuffle(
+        Object.values(verb[tense]).filter(f => f !== correct)
+      ).slice(0, 3);
+      questions.push({ verb, pronoun: pron, tense, correctForm: correct, options: shuffle([correct, ...wrongs]) });
+    });
+  });
+  questions = shuffle(questions).slice(0, 15);
+}
+
+function startGame() {
+  buildQuestions();
+  currentQ = 0; score = 0; correct = 0; wrong = 0; streak = 0;
+  document.getElementById('congrats').style.display = 'none';
+  document.getElementById('gameArea').style.display = 'block';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (currentQ >= questions.length) { showCongrats(); return; }
+  const q = questions[currentQ];
+
+  document.getElementById('qCounter').textContent = 'Question ' + (currentQ + 1) + '/' + questions.length;
+  document.getElementById('cTense').textContent = q.tense === 'passe' ? '🕐 Passé' : '⚡ Présent';
+  document.getElementById('cPronoun').textContent = q.pronoun.darija;
+  document.getElementById('cPronounFr').textContent = '(' + q.pronoun.fr + ')';
+  document.getElementById('cVerb').textContent = q.verb.darija;
+  document.getElementById('cVerbFr').textContent = q.verb.fr;
+  document.getElementById('cType').textContent = q.verb.type;
+  document.getElementById('ruleBox').style.display = 'none';
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+  updateStreak();
+
+  const grid = document.getElementById('answerOptions');
+  grid.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(btn, opt, q);
+    grid.appendChild(btn);
+  });
+  updateStats();
+}
+
+function selectAnswer(btn, answer, q) {
+  document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
+  const fb = document.getElementById('feedback');
+  const rule = document.getElementById('ruleBox');
+
+  if (answer === q.correctForm) {
+    btn.classList.add('correct');
+    correct++; streak++; score += 10 + Math.min(streak * 2, 20);
+    fb.className = 'feedback correct';
+    fb.innerHTML = '✅ <strong>Excellent !</strong> ' + q.pronoun.darija + ' + ' + q.verb.darija + ' → <strong>' + q.correctForm + '</strong>';
+    fb.style.display = 'block';
+  } else {
+    btn.classList.add('wrong');
+    wrong++; streak = 0;
+    document.querySelectorAll('.ans-btn').forEach(b => {
+      if (b.textContent === q.correctForm) b.classList.add('reveal');
+    });
+    fb.className = 'feedback wrong';
+    fb.innerHTML = '❌ La bonne réponse : <strong>' + q.correctForm + '</strong>';
+    fb.style.display = 'block';
+    rule.innerHTML = '📖 Règle : ' + q.verb.rule;
+    rule.style.display = 'block';
+  }
+
+  document.getElementById('btnNext').style.display = 'block';
+  updateStats();
+  updateStreak();
+}
+
+function nextQuestion() { currentQ++; loadQuestion(); }
+
+function updateStreak() {
+  const el = document.getElementById('streakBadge');
+  if (streak >= 3) el.textContent = '🔥 Série de ' + streak + ' !';
+  else if (streak >= 2) el.textContent = '⚡ ' + streak + ' bonnes de suite !';
+  else el.textContent = '';
+}
+
+function updateStats() {
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statStreak').textContent = streak;
+  document.getElementById('scoreDisplay').textContent = score + ' pts';
+}
+
+function showCongrats() {
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('congrats').style.display = 'block';
+  const pct = Math.round(correct / questions.length * 100);
+  document.getElementById('congratsMsg').textContent = correct + '/' + questions.length + ' (' + pct + '%) — ' + score + ' points gagnés !';
+  const xp = parseInt(localStorage.getItem('darija_xp') || '0') + score;
+  localStorage.setItem('darija_xp', xp);
+}
+
+function restartGame() { startGame(); }
+startGame();
+</script>
+</body>
+</html>
