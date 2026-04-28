@@ -279,7 +279,7 @@ function loadQuestion() {
   q.options.forEach(opt => {
     const btn = document.createElement('div');
     btn.className = 'option-btn';
-    btn.innerHTML = `<div class="option-darija">${opt.darija}</div><div class="option-fr">${opt.fr}</div>`;
+    btn.innerHTML = `<div class="option-darija">${opt.darija}</div>`;
     btn.onclick = () => selectOption(btn, opt.correct, q);
     grid.appendChild(btn);
   });

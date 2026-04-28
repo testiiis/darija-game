@@ -394,7 +394,6 @@ function makeCard(line, idx, inAnswer, num) {
     ${num ? '<div class="card-num">' + num + '</div>' : ''}
     <div class="card-speaker ${line.speaker}">${line.speaker === 'a' ? '👤 Personne A' : '👤 Personne B'}</div>
     <div class="card-darija">${line.darija}</div>
-    <div class="card-fr">${line.fr}</div>
   `;
   card.onclick = () => toggleCard(idx, inAnswer);
   return card;

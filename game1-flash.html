@@ -309,35 +309,81 @@ const cards = {
   salutations: [
     { fr: "Bonjour / Salut", darija: "Salam / Salamo 3alaykom", arabic: "سلام", example: "Salam ! Labas ?" },
     { fr: "Bonjour (le matin)", darija: "Sbah lkhir", arabic: "صباح الخير", example: "Sbah lkhir ! Sbah noor !" },
+    { fr: "Bonne nuit / bonsoir", darija: "Msa lkhir", arabic: "مسا الخير", example: "Msa lkhir ! Ki dayer ?" },
     { fr: "Comment tu vas ?", darija: "Labas ? / Mezyan ?", arabic: "لاباس؟", example: "Labas 3lik ?" },
     { fr: "Je vais bien (merci à Dieu)", darija: "Ana bikhir, lhamdolah", arabic: "بخير الحمدلله", example: "Bikhir, lhamdolah. Nta ?" },
     { fr: "Tout va bien ?", darija: "Wach kolchi labas ?", arabic: "واش كلشي لاباس؟", example: "Kolchi labas, lhamdolah !" },
     { fr: "Comment tu t'appelles ?", darija: "Chno smitek ?", arabic: "شنو سميتك؟", example: "Chno smitek ? — Smiti Youssef." },
+    { fr: "Mon nom est...", darija: "Smiti...", arabic: "سميتي", example: "Smiti Nadia, o nti ?" },
     { fr: "D'où tu viens ?", darija: "Mnin nta / nti ?", arabic: "منين نت؟", example: "Ana man Fransa. Nta ?" },
+    { fr: "Quel âge as-tu ?", darija: "Chhal f 3omrak ?", arabic: "شحال ف عمرك؟", example: "Chhal f 3omrak ? — 3andi 3achrin 3am." },
+    { fr: "Tu as des frères et sœurs ?", darija: "Wach 3andak khotek ?", arabic: "واش عندك خوتك؟", example: "3andi khoya wahed o khti waheda." },
+    { fr: "Qu'est-ce que tu aimes faire ?", darija: "Chno kay3ajbak dir ?", arabic: "شنو كيعجبك تدير؟", example: "Kay3ajabni nqra o ntiyeb." },
+    { fr: "Au revoir !", darija: "Bslama !", arabic: "بسلامة", example: "Bslama, ntlaqaw ghda !" },
+    { fr: "À bientôt !", darija: "Ntlaqaw !", arabic: "نتلقاو", example: "Ntlaqaw lbareh !" },
   ],
   verbes: [
     { fr: "Aller", darija: "Mcha (irrégulier)", arabic: "مشى", example: "Mchit L hammam lbareh." },
     { fr: "Manger", darija: "Kla (irrégulier)", arabic: "كلا", example: "Klit laftor diali." },
-    { fr: "Cuisinier", darija: "Tiyeb (régulier)", arabic: "طيّب", example: "Tiyebna f lkozina." },
+    { fr: "Cuisiner", darija: "Tiyeb (régulier)", arabic: "طيّب", example: "Tiyebna f lkozina." },
     { fr: "Travailler", darija: "Khdam (régulier)", arabic: "خدم", example: "Khdamt mzyan lyoma." },
     { fr: "Parler", darija: "Hdar (régulier)", arabic: "هضر", example: "Hdarti m3a smiti ?" },
-    { fr: "Voir", darija: "Shaf (irrégulier)", arabic: "شاف", example: "Chaft film mezyan." },
-    { fr: "Aller à la plage", darija: "Mcha L bhar", arabic: "مشى للبحر", example: "Mchina L bhar f weekend." },
+    { fr: "Voir / Regarder", darija: "Shaf (irrégulier)", arabic: "شاف", example: "Chaft film mezyan." },
     { fr: "Nager", darija: "3am (irrégulier)", arabic: "عام", example: "3amna f lbhar." },
     { fr: "Jouer", darija: "L3ab (irrégulier)", arabic: "لعب", example: "L3abna lkora." },
     { fr: "S'habiller", darija: "Lbas (irrégulier)", arabic: "لبس", example: "Lbasna hwayji." },
+    { fr: "Se lever / se réveiller", darija: "Nad (irrégulier)", arabic: "ناض", example: "Nadit bakri lbareh." },
+    { fr: "Boire", darija: "Chrab (régulier)", arabic: "شرب", example: "Chrabt lqahwa diali." },
+    { fr: "Préparer / faire", darija: "Saweb (régulier)", arabic: "صوب", example: "Sawbat laftor." },
+    { fr: "Prendre", darija: "Khda (irrégulier)", arabic: "خدا", example: "Khadit tran lkhadma." },
+    { fr: "Revenir / rentrer", darija: "Rja3 (irrégulier)", arabic: "رجع", example: "Rja3t ldar f la3chiya." },
+    { fr: "Rencontrer / retrouver", darija: "Tlaqа (irrégulier)", arabic: "تلاقى", example: "Tlaqit m3a sshabi." },
+    { fr: "Se promener / marcher", darija: "Tmacha (irrégulier)", arabic: "تماشى", example: "Tmachina chwiya f lmdina." },
+    { fr: "Lire", darija: "Qra (irrégulier)", arabic: "قرا", example: "Qrit ktab f lil." },
+    { fr: "Dormir / s'endormir", darija: "N3as (irrégulier)", arabic: "نعس", example: "N3asst bakri lbareh." },
+    { fr: "Oublier", darija: "Nsa (irrégulier)", arabic: "نسا", example: "Nsit smitek !" },
+    { fr: "Comprendre", darija: "Fham (régulier)", arabic: "فهم", example: "Fhamt lqа3ida." },
   ],
   vocabulaire: [
     { fr: "La famille", darija: "L3a'ila", arabic: "العائلة", example: "Ki dayra l3a'iltek ?" },
+    { fr: "Le père", darija: "Baba / lwalid", arabic: "بابا", example: "Baba khdam bzaf lyoma." },
+    { fr: "La mère", darija: "Mama / lwalida", arabic: "ماما", example: "Mama tiyebt mezyan." },
+    { fr: "Le frère", darija: "Khoy / khoya", arabic: "خويا", example: "Khoya kbar menni." },
+    { fr: "La sœur", darija: "Khti", arabic: "ختي", example: "Khti sghar menni." },
     { fr: "Le travail", darija: "Lkhadma", arabic: "الخدمة", example: "Lkhadma ghada mezyan." },
-    { fr: "Le matin", darija: "Ssbah / nhar", arabic: "الصباح", example: "Nadna bakri f ssbah." },
+    { fr: "Le matin / la journée", darija: "Ssbah / nhar", arabic: "الصباح", example: "Nadna bakri f ssbah." },
+    { fr: "Le soir", darija: "La3chiya", arabic: "العشية", example: "F la3chiya mchit lasal." },
+    { fr: "La nuit", darija: "Llil", arabic: "الليل", example: "F lil qrit ktab." },
+    { fr: "Hier", darija: "Lbareh", arabic: "البارح", example: "Mchit lkhadma lbareh." },
+    { fr: "Aujourd'hui", darija: "Lyoma", arabic: "اليوما", example: "Lyoma ljaw mezyan." },
+    { fr: "Demain", darija: "Ghda", arabic: "غدا", example: "Kanmchi L bhar ghda." },
     { fr: "Le café", darija: "Lqahwa", arabic: "القهوة", example: "Chrabt lqahwa diali." },
     { fr: "Le petit-déjeuner", darija: "Laftor", arabic: "الفطور", example: "Klat laftor dyalha." },
+    { fr: "Le déjeuner", darija: "Laghda", arabic: "الغدا", example: "Klina laghda m3a colleagues." },
+    { fr: "Le dîner", darija: "La3cha", arabic: "العشا", example: "Tiyebt la3cha f lil." },
     { fr: "Les vêtements", darija: "Hwayej", arabic: "الهوايج", example: "Lbasna hwayji o mchina." },
-    { fr: "Le sac", darija: "Shkara", arabic: "الشكارة", example: "Jma3t shkara dyali." },
-    { fr: "La semaine", darija: "Simana", arabic: "السيمانة", example: "Simana kolha khadamt." },
-    { fr: "La plage", darija: "Lbhar", arabic: "البحر", example: "Mchina L bhar f weekend." },
-    { fr: "Les amis", darija: "Sshab / Ssahb", arabic: "الصحاب", example: "Khrojt m3a sshabi." },
+    { fr: "Le sac / le cartable", darija: "Shkara", arabic: "الشكارة", example: "Jma3t shkara dyali." },
+    { fr: "La plage / la mer", darija: "Lbhar", arabic: "البحر", example: "Mchina L bhar f weekend." },
+    { fr: "Les amis", darija: "Sshab / sahbi", arabic: "الصحاب", example: "Khrojt m3a sshabi." },
+    { fr: "La ville / la médina", darija: "Lmdina", arabic: "المدينة", example: "Tmachina f lmdina." },
+    { fr: "Le train", darija: "Tran", arabic: "الطران", example: "Khadit tran bash narja3 ldar." },
+    { fr: "La météo / le temps", darija: "Ljaw", arabic: "الجو", example: "Ki dayer ljaw lyoma ?" },
+    { fr: "Le soleil", darija: "Chamch", arabic: "الشمس", example: "Kayen chamch, ljaw mezyan !" },
+    { fr: "La pluie", darija: "Chta", arabic: "الشتا", example: "Kayna chta lyoma." },
+    { fr: "Le froid", darija: "Lbard", arabic: "البرد", example: "Kayen lbard bzaf f chta." },
+    { fr: "La chaleur", darija: "Sahd / lharara", arabic: "السخونة", example: "Kayen sahd bzaf f lbhar." },
+  ],
+  nombres: [
+    { fr: "Un / Une", darija: "Wahed / waheda", arabic: "واحد", example: "3andi khoya wahed." },
+    { fr: "Deux", darija: "Jouj", arabic: "جوج", example: "Klit jouj teffahat." },
+    { fr: "Trois", darija: "Tlata", arabic: "تلاتة", example: "3andi tlata d lkhot." },
+    { fr: "Quatre", darija: "Rb3a", arabic: "ربعة", example: "Mchina rb3a f lbhar." },
+    { fr: "Cinq", darija: "Khamsa", arabic: "خمسة", example: "Khamsa dqayeq w nkun." },
+    { fr: "Dix", darija: "3achra", arabic: "عشرة", example: "3andi 3achra d sshab." },
+    { fr: "Vingt", darija: "3achrin", arabic: "عشرين", example: "3andi 3achrin 3am." },
+    { fr: "Trente", darija: "Tlatin", arabic: "تلاتين", example: "Khoya 3andu tlatin 3am." },
+    { fr: "Cent", darija: "Mya", arabic: "ميا", example: "Mya dirhm ghali bzaf." },
+    { fr: "Combien ?", darija: "Bachhal ? / Chhal ?", arabic: "بشحال؟", example: "Bachhal had lktab ?" },
   ]
 };
 
@@ -351,8 +397,9 @@ let streak = 0;
 let flipped = false;
 
 function buildCategories() {
-  const cats = { salutations: '🌙 Salutations', verbes: '⚡ Verbes', vocabulaire: '📚 Vocabulaire' };
+  const cats = { salutations: '🌙 Salutations', verbes: '⚡ Verbes', vocabulaire: '📚 Vocabulaire', nombres: '🔢 Nombres' };
   const div = document.getElementById('categories');
+  div.innerHTML = '';
   Object.entries(cats).forEach(([key, label]) => {
     const btn = document.createElement('button');
     btn.className = 'cat-btn' + (key === currentCategory ? ' active' : '');
@@ -364,9 +411,7 @@ function buildCategories() {
 
 function switchCat(cat) {
   currentCategory = cat;
-  document.querySelectorAll('.cat-btn').forEach((b, i) => {
-    b.className = 'cat-btn' + (Object.keys({salutations:1,verbes:1,vocabulaire:1})[i] === cat ? ' active' : '');
-  });
+  buildCategories();
   startGame();
 }
 
